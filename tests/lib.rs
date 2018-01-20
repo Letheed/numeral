@@ -8,17 +8,25 @@
 extern crate numeral;
 
 use numeral::Cardinal;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+
+fn read_file(filename: &str) -> Result<String, std::io::Error> {
+    use std::fs::File;
+    use std::io::Read;
+
+    let mut file = File::open(filename)?;
+    let mut buffer = String::new();
+    file.read_to_string(&mut buffer)?;
+    Ok(buffer)
+}
 
 macro_rules! test_call_on_min_max {
-    ($fn_name:ident, $numtype:ty) => (
+    ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
             <$numtype>::max_value().cardinal();
             <$numtype>::min_value().cardinal();
         }
-    )
+    };
 }
 
 test_call_on_min_max!(call_on_min_max_i8, i8);
@@ -33,14 +41,14 @@ test_call_on_min_max!(call_on_min_max_isize, isize);
 test_call_on_min_max!(call_on_min_max_usize, usize);
 
 macro_rules! test_call_on_range {
-    ($fn_name:ident, $numtype:ty) => (
+    ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
             for n in (<$numtype>::min_value())..=(<$numtype>::max_value()) {
                 n.cardinal();
             }
         }
-    )
+    };
 }
 
 test_call_on_range!(call_on_range_i8, i8);
@@ -49,7 +57,7 @@ test_call_on_range!(call_on_range_i16, i16);
 test_call_on_range!(call_on_range_u16, u16);
 
 macro_rules! test_call_on_critical_ranges {
-    ($fn_name:ident, $numtype:ty) => (
+    ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
             for n in (<$numtype>::min_value())..=(<$numtype>::min_value()) + 130 {
@@ -64,7 +72,7 @@ macro_rules! test_call_on_critical_ranges {
                 }
             }
         }
-    )
+    };
 }
 
 test_call_on_critical_ranges!(call_on_critical_ranges_i32, i32);
@@ -76,22 +84,24 @@ test_call_on_critical_ranges!(call_on_critical_ranges_usize, usize);
 
 #[test]
 fn cardinal_value_m256_256() {
-    let file = File::open("tests/cardinal_m256..=256.txt").unwrap();
-    assert!(BufReader::new(file).lines()
-            .map(|n_str| n_str.unwrap())
-            .eq((-256..=256).map(|n: i32| n.cardinal())));
+    let cardinals = read_file("tests/cardinal_m256..=256.txt").unwrap();
+    assert!(
+        cardinals
+            .lines()
+            .eq((-256..=256).map(|n: i32| n.cardinal()))
+    );
 }
 
 #[test]
 fn cardinal_value_min_max_int() {
-    let file = File::open("tests/cardinal_min_max.txt").unwrap();
-    let mut lines = BufReader::new(file).lines().map(|n_str| n_str.unwrap());
+    let cardinals = read_file("tests/cardinal_min_max.txt").unwrap();
+    let mut lines = cardinals.lines();
     macro_rules! assert_eq_min_max {
-        ($signed:ty, $unsigned:ty) => (
+        ($signed:ty, $unsigned:ty) => {
             assert_eq!(lines.next().unwrap(), <$signed>::min_value().cardinal());
             assert_eq!(lines.next().unwrap(), <$signed>::max_value().cardinal());
             assert_eq!(lines.next().unwrap(), <$unsigned>::max_value().cardinal());
-        )
+        };
     }
     assert_eq!(lines.next().unwrap(), 0.cardinal());
     assert_eq_min_max!(i8, u8);
@@ -105,12 +115,12 @@ fn cardinal_value_min_max_ptr() {
     use std::mem::size_of;
 
     macro_rules! assert_eq_min_max_if_ptr_is {
-        ($ptr:ty, $int:ty) => (
+        ($ptr:ty, $int:ty) => {
             if size_of::<$ptr>() == size_of::<$int>() {
                 assert_eq!(<$ptr>::min_value().cardinal(), <$int>::min_value().cardinal());
                 assert_eq!(<$ptr>::max_value().cardinal(), <$int>::max_value().cardinal());
             }
-        )
+        };
     }
     assert_eq_min_max_if_ptr_is!(isize, i8);
     assert_eq_min_max_if_ptr_is!(isize, i16);
