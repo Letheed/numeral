@@ -14,10 +14,9 @@
 //! println!("{} is written: {}", n, n.cardinal());
 //! ```
 
-
 #![warn(missing_docs)]
 
-const NUMBER: [&'static str; 20] = [
+const NUMBER: [&str; 20] = [
     "zero",
     "one",
     "two",
@@ -40,7 +39,7 @@ const NUMBER: [&'static str; 20] = [
     "nineteen",
 ];
 
-const TENS: [&'static str; 10] = [
+const TENS: [&str; 10] = [
     "",
     "",
     "twenty",
@@ -53,7 +52,7 @@ const TENS: [&'static str; 10] = [
     "ninety",
 ];
 
-const MULTIPLIER: [&'static str; 9] = [
+const MULTIPLIER: [&str; 9] = [
     "",
     "thousand",
     "million",
@@ -80,39 +79,47 @@ pub trait Cardinal {
 }
 
 macro_rules! impl_numeral_signed {
-    ($($numtype:ty),*) => ($(
+    ($($numtype:ty),*) => {$(
         impl Cardinal for $numtype {
             fn cardinal(&self) -> String {
                 cardinal_int(i64::from(*self).abs() as u64, self.is_negative())
             }
         }
-    )*)
+    )*};
 }
 
 impl_numeral_signed!(i8, i16, i32);
 
 macro_rules! impl_numeral_unsigned {
-    ($($numtype:ty),*) => ($(
+    ($($numtype:ty),*) => {$(
         impl Cardinal for $numtype {
             fn cardinal(&self) -> String {
                 cardinal_int(u64::from(*self), false)
             }
         }
-    )*)
+    )*};
 }
 
 impl_numeral_unsigned!(u8, u16, u32, u64);
 
 impl Cardinal for i64 {
     fn cardinal(&self) -> String {
-        let n_abs = if *self == i64::min_value() { *self as u64 } else { self.abs() as u64 };
+        let n_abs = if *self == i64::min_value() {
+            *self as u64
+        } else {
+            self.abs() as u64
+        };
         cardinal_int(n_abs, self.is_negative())
     }
 }
 
 impl Cardinal for isize {
     fn cardinal(&self) -> String {
-        let n_abs = if *self == isize::min_value() { *self as usize } else { self.abs() as usize };
+        let n_abs = if *self == isize::min_value() {
+            *self as usize
+        } else {
+            self.abs() as usize
+        };
         cardinal_int(n_abs as u64, self.is_negative())
     }
 }
@@ -126,28 +133,39 @@ impl Cardinal for usize {
 /// Returns the written form of any 64-bit integer
 /// as a vector of strings.
 fn cardinal_int(n: u64, negative: bool) -> String {
-    if n == 0 { return String::from(NUMBER[0]) }
+    if n == 0 {
+        return String::from(NUMBER[0]);
+    }
     let multiple_order = ((n as f32).log10() as u32) / 3;
     let max_len = multiple_order as usize * 8 + 6;
     let mut cardinal = Vec::with_capacity(max_len);
-    if negative { cardinal.push("minus "); }
+    if negative {
+        cardinal.push("minus ");
+    }
     compose_cardinal_int(n, multiple_order, &mut cardinal);
     debug_assert!(cardinal.len() <= max_len);
     cardinal.concat()
 }
 
 macro_rules! push {
-    ($vec:ident, $table:ident[$index:ident]) => (
-        debug_assert!(($index as usize) < $table.len(), format!("{} out of {}'s range", stringify!($index), stringify!($table)));
+    ($vec:ident, $table:ident[$index:ident]) => {
+        debug_assert!(
+            ($index as usize) < $table.len(),
+            format!("{} out of {}'s range", stringify!($index), stringify!($table))
+        );
         $vec.push($table[$index as usize]);
-    )
+    };
 }
 
 /// Pushes the strings composing the cardinal form of any unsigned 64-bit number
 /// on a vector. Zero is ignored.
 fn compose_cardinal_int(mut n: u64, mut multiple_order: u32, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in compose_cardinal_int()");
-    debug_assert_eq!(multiple_order, ((n as f32).log10() as u32) / 3, "wrong value for multiple_order in compose_cardinal_int()");
+    debug_assert_eq!(
+        multiple_order,
+        ((n as f32).log10() as u32) / 3,
+        "wrong value for multiple_order in compose_cardinal_int()"
+    );
 
     if multiple_order > 0 {
         let mut multiplier = 10u64.pow(multiple_order * 3);
@@ -159,11 +177,16 @@ fn compose_cardinal_int(mut n: u64, mut multiple_order: u32, cardinal: &mut Vec<
                 push_triplet(multiplicand, cardinal);
                 cardinal.push(" ");
                 push!(cardinal, MULTIPLIER[multiple_order]);
-                if n != 0 { cardinal.push(" "); }
-                else { return }
+                if n != 0 {
+                    cardinal.push(" ");
+                } else {
+                    return;
+                }
             }
             multiple_order -= 1;
-            if multiple_order == 0 { break }
+            if multiple_order == 0 {
+                break;
+            }
             multiplier /= 1000;
         }
     }
@@ -180,8 +203,12 @@ fn push_triplet(n: u64, cardinal: &mut Vec<&str>) {
     let rest = n % 100;
     if hundreds != 0 {
         push!(cardinal, NUMBER[hundreds]);
-        if rest == 0 { cardinal.push(" hundred"); return }
-        else { cardinal.push(" hundred "); }
+        if rest == 0 {
+            cardinal.push(" hundred");
+            return;
+        } else {
+            cardinal.push(" hundred ");
+        }
     }
     push_doublet(rest, cardinal);
 }
@@ -192,10 +219,9 @@ fn push_doublet(n: u64, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in push_doublet()");
     debug_assert!(n < 100, "n >= 100 in push_doublet()");
 
-    if n < 20  {
+    if n < 20 {
         push!(cardinal, NUMBER[n]);
-    }
-    else {
+    } else {
         let tens = n / 10;
         let ones = n % 10;
         push!(cardinal, TENS[tens]);
