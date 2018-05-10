@@ -28,7 +28,7 @@ test_call_on_min_max!(call_on_min_max_u64, u64);
 test_call_on_min_max!(call_on_min_max_isize, isize);
 test_call_on_min_max!(call_on_min_max_usize, usize);
 
-macro_rules! test_call_on_range {
+macro_rules! test_call_on_full_range {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
@@ -39,10 +39,10 @@ macro_rules! test_call_on_range {
     };
 }
 
-test_call_on_range!(call_on_range_i8, i8);
-test_call_on_range!(call_on_range_u8, u8);
-test_call_on_range!(call_on_range_i16, i16);
-test_call_on_range!(call_on_range_u16, u16);
+test_call_on_full_range!(call_on_full_range_i8, i8);
+test_call_on_full_range!(call_on_full_range_u8, u8);
+test_call_on_full_range!(call_on_full_range_i16, i16);
+test_call_on_full_range!(call_on_full_range_u16, u16);
 
 macro_rules! test_call_on_critical_ranges {
     ($fn_name:ident, $numtype:ty) => {
