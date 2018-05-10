@@ -7,16 +7,6 @@ extern crate numeral;
 
 use numeral::Cardinal;
 
-fn read_file(filename: &str) -> Result<String, std::io::Error> {
-    use std::fs::File;
-    use std::io::Read;
-
-    let mut file = File::open(filename)?;
-    let mut buffer = String::new();
-    file.read_to_string(&mut buffer)?;
-    Ok(buffer)
-}
-
 macro_rules! test_call_on_min_max {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
@@ -82,7 +72,7 @@ test_call_on_critical_ranges!(call_on_critical_ranges_usize, usize);
 
 #[test]
 fn cardinal_value_m256_256() {
-    let cardinals = read_file("tests/cardinal_m256..=256.txt").unwrap();
+    let cardinals = std::fs::read_to_string("tests/cardinal_m256..=256.txt").unwrap();
     assert!(
         cardinals
             .lines()
@@ -92,7 +82,7 @@ fn cardinal_value_m256_256() {
 
 #[test]
 fn cardinal_value_min_max_int() {
-    let cardinals = read_file("tests/cardinal_min_max.txt").unwrap();
+    let cardinals = std::fs::read_to_string("tests/cardinal_min_max.txt").unwrap();
     let mut lines = cardinals.lines();
     macro_rules! assert_eq_min_max {
         ($signed:ty, $unsigned:ty) => {
