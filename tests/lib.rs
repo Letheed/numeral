@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#![feature(inclusive_range_syntax)]
-
 extern crate numeral;
 
 use numeral::Cardinal;

@@ -4,7 +4,6 @@
  */
 
 #![feature(test)]
-#![feature(inclusive_range_syntax)]
 
 extern crate numeral;
 extern crate test;
