@@ -16,7 +16,7 @@
 
 #![warn(missing_docs)]
 
-const NUMBER: [&str; 20] = [
+static NUMBER: [&str; 20] = [
     "zero",
     "one",
     "two",
@@ -39,7 +39,7 @@ const NUMBER: [&str; 20] = [
     "nineteen",
 ];
 
-const TENS: [&str; 10] = [
+static TENS: [&str; 10] = [
     "",
     "",
     "twenty",
@@ -52,7 +52,7 @@ const TENS: [&str; 10] = [
     "ninety",
 ];
 
-const MULTIPLIER: [&str; 9] = [
+static MULTIPLIER: [&str; 9] = [
     "",
     "thousand",
     "million",
