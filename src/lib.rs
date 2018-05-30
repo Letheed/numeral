@@ -16,7 +16,7 @@
 
 #![warn(missing_docs)]
 
-static NUMBER: [&str; 20] = [
+const NUMBER: [&str; 20] = [
     "zero",
     "one",
     "two",
@@ -39,7 +39,8 @@ static NUMBER: [&str; 20] = [
     "nineteen",
 ];
 
-static TENS: [&str; 10] = [
+#[cfg_attr(rustfmt, rustfmt_skip)]
+const TENS: [&str; 10] = [
     "",
     "",
     "twenty",
@@ -52,7 +53,7 @@ static TENS: [&str; 10] = [
     "ninety",
 ];
 
-static MULTIPLIER: [&str; 9] = [
+const MULTIPLIER: [&str; 9] = [
     "",
     "thousand",
     "million",
@@ -151,7 +152,11 @@ macro_rules! push {
     ($vec:ident, $table:ident[$index:ident]) => {
         debug_assert!(
             ($index as usize) < $table.len(),
-            format!("{} out of {}'s range", stringify!($index), stringify!($table))
+            format!(
+                "{} out of {}'s range",
+                stringify!($index),
+                stringify!($table)
+            )
         );
         $vec.push($table[$index as usize]);
     };

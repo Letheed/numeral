@@ -105,8 +105,14 @@ fn cardinal_value_min_max_ptr() {
     macro_rules! assert_eq_min_max_if_ptr_is {
         ($ptr:ty, $int:ty) => {
             if size_of::<$ptr>() == size_of::<$int>() {
-                assert_eq!(<$ptr>::min_value().cardinal(), <$int>::min_value().cardinal());
-                assert_eq!(<$ptr>::max_value().cardinal(), <$int>::max_value().cardinal());
+                assert_eq!(
+                    <$ptr>::min_value().cardinal(),
+                    <$int>::min_value().cardinal()
+                );
+                assert_eq!(
+                    <$ptr>::max_value().cardinal(),
+                    <$int>::max_value().cardinal()
+                );
             }
         };
     }
