@@ -100,22 +100,14 @@ impl_numeral_unsigned!(u8, u16, u32, u64);
 
 impl Cardinal for i64 {
     fn cardinal(&self) -> String {
-        let n_abs = if *self == i64::min_value() {
-            *self as u64
-        } else {
-            self.abs() as u64
-        };
+        let n_abs = if *self == i64::min_value() { *self as u64 } else { self.abs() as u64 };
         cardinal_int(n_abs, self.is_negative())
     }
 }
 
 impl Cardinal for isize {
     fn cardinal(&self) -> String {
-        let n_abs = if *self == isize::min_value() {
-            *self as usize
-        } else {
-            self.abs() as usize
-        };
+        let n_abs = if *self == isize::min_value() { *self as usize } else { self.abs() as usize };
         cardinal_int(n_abs as u64, self.is_negative())
     }
 }
@@ -147,11 +139,7 @@ macro_rules! push {
     ($vec:ident, $table:ident[$index:ident]) => {
         debug_assert!(
             ($index as usize) < $table.len(),
-            format!(
-                "{} out of {}'s range",
-                stringify!($index),
-                stringify!($table)
-            )
+            format!("{} out of {}'s range", stringify!($index), stringify!($table))
         );
         $vec.push($table[$index as usize]);
     };

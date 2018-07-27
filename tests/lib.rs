@@ -68,11 +68,7 @@ test_call_on_critical_ranges!(call_on_critical_ranges_usize, usize);
 #[test]
 fn cardinal_value_m256_256() {
     let cardinals = std::fs::read_to_string("tests/cardinal_m256..=256.txt").unwrap();
-    assert!(
-        cardinals
-            .lines()
-            .eq((-256..=256).map(|n: i32| n.cardinal()))
-    );
+    assert!(cardinals.lines().eq((-256..=256).map(|n: i32| n.cardinal())));
 }
 
 #[test]
@@ -100,14 +96,8 @@ fn cardinal_value_min_max_ptr() {
     macro_rules! assert_eq_min_max_if_ptr_is {
         ($ptr:ty, $int:ty) => {
             if size_of::<$ptr>() == size_of::<$int>() {
-                assert_eq!(
-                    <$ptr>::min_value().cardinal(),
-                    <$int>::min_value().cardinal()
-                );
-                assert_eq!(
-                    <$ptr>::max_value().cardinal(),
-                    <$int>::max_value().cardinal()
-                );
+                assert_eq!(<$ptr>::min_value().cardinal(), <$int>::min_value().cardinal());
+                assert_eq!(<$ptr>::max_value().cardinal(), <$int>::max_value().cardinal());
             }
         };
     }
