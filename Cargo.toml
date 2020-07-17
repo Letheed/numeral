@@ -1,10 +1,18 @@
 [package]
 name = "numeral"
-version = "0.3.1"
+version = "1.0.0"
 authors = ["Letheed <letheed@outlook.com>"]
 description = "Written english form of a number"
 documentation = "https://docs.rs/numeral"
 repository = "https://github.com/letheed/numeral"
 readme = "README.md"
 keywords = ["number", "numeral", "written", "word", "cardinal"]
-license = "MPL-2.0"
+license = "MIT"
+edition = "2018"
+
+[dev-dependencies]
+bencher = "0.1"
+
+[[bench]]
+name = "lib"
+harness = false

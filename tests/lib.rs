@@ -1,13 +1,12 @@
-extern crate numeral;
-
 use numeral::Cardinal;
+use std::{fs, mem};
 
 macro_rules! test_call_on_min_max {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
-            <$numtype>::max_value().cardinal();
-            <$numtype>::min_value().cardinal();
+            <$numtype>::MAX.cardinal();
+            <$numtype>::MIN.cardinal();
         }
     };
 }
@@ -27,7 +26,7 @@ macro_rules! test_call_on_full_range {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
-            for n in (<$numtype>::min_value())..=(<$numtype>::max_value()) {
+            for n in (<$numtype>::MIN)..=(<$numtype>::MAX) {
                 n.cardinal();
             }
         }
@@ -43,13 +42,13 @@ macro_rules! test_call_on_critical_ranges {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
-            for n in (<$numtype>::min_value())..=(<$numtype>::min_value()) + 130 {
+            for n in (<$numtype>::MIN)..=(<$numtype>::MIN) + 130 {
                 n.cardinal();
             }
-            for n in (<$numtype>::max_value()) - 130..=(<$numtype>::max_value()) {
+            for n in (<$numtype>::MAX) - 130..=(<$numtype>::MAX) {
                 n.cardinal();
             }
-            if <$numtype>::min_value() != 0 {
+            if <$numtype>::MIN != 0 {
                 for n in -130..=130 {
                     n.cardinal();
                 }
@@ -67,19 +66,19 @@ test_call_on_critical_ranges!(call_on_critical_ranges_usize, usize);
 
 #[test]
 fn cardinal_value_m256_256() {
-    let cardinals = std::fs::read_to_string("tests/cardinal_m256..=256.txt").unwrap();
+    let cardinals = fs::read_to_string("tests/cardinal_-256..=256.txt").unwrap();
     assert!(cardinals.lines().eq((-256..=256).map(|n: i32| n.cardinal())));
 }
 
 #[test]
 fn cardinal_value_min_max_int() {
-    let cardinals = std::fs::read_to_string("tests/cardinal_min_max.txt").unwrap();
+    let cardinals = fs::read_to_string("tests/cardinal_min_max.txt").unwrap();
     let mut lines = cardinals.lines();
     macro_rules! assert_eq_min_max {
         ($signed:ty, $unsigned:ty) => {
-            assert_eq!(lines.next().unwrap(), <$signed>::min_value().cardinal());
-            assert_eq!(lines.next().unwrap(), <$signed>::max_value().cardinal());
-            assert_eq!(lines.next().unwrap(), <$unsigned>::max_value().cardinal());
+            assert_eq!(lines.next().unwrap(), <$signed>::MIN.cardinal());
+            assert_eq!(lines.next().unwrap(), <$signed>::MAX.cardinal());
+            assert_eq!(lines.next().unwrap(), <$unsigned>::MAX.cardinal());
         };
     }
     assert_eq!(lines.next().unwrap(), 0.cardinal());
@@ -91,13 +90,11 @@ fn cardinal_value_min_max_int() {
 
 #[test]
 fn cardinal_value_min_max_ptr() {
-    use std::mem::size_of;
-
     macro_rules! assert_eq_min_max_if_ptr_is {
         ($ptr:ty, $int:ty) => {
-            if size_of::<$ptr>() == size_of::<$int>() {
-                assert_eq!(<$ptr>::min_value().cardinal(), <$int>::min_value().cardinal());
-                assert_eq!(<$ptr>::max_value().cardinal(), <$int>::max_value().cardinal());
+            if mem::size_of::<$ptr>() == mem::size_of::<$int>() {
+                assert_eq!(<$ptr>::MIN.cardinal(), <$int>::MIN.cardinal());
+                assert_eq!(<$ptr>::MAX.cardinal(), <$int>::MAX.cardinal());
             }
         };
     }

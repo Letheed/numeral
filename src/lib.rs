@@ -1,3 +1,7 @@
+#![warn(missing_docs)]
+#![warn(rust_2018_idioms)]
+#![deny(unsafe_code)]
+
 //! A library providing the written english form of a number.
 //!
 //! # Example
@@ -6,10 +10,8 @@
 //! use numeral::Cardinal;
 //!
 //! let n = 127;
-//! println!("{} is written: {}", n, n.cardinal());
+//! println!("{} is written {}", n, n.cardinal());
 //! ```
-
-#![warn(missing_docs)]
 
 const NUMBER: [&str; 20] = [
     "zero",
@@ -34,7 +36,7 @@ const NUMBER: [&str; 20] = [
     "nineteen",
 ];
 
-#[cfg_attr(rustfmt, rustfmt_skip)]
+#[rustfmt::skip]
 const TENS: [&str; 10] = [
     "",
     "",
@@ -62,7 +64,7 @@ const MULTIPLIER: [&str; 9] = [
 
 /// Provides the cardinal written form of a number.
 pub trait Cardinal {
-    /// Yields the cardinal form of a number.
+    /// Returns the cardinal form of a number.
     ///
     /// # Examples
     ///
@@ -100,14 +102,14 @@ impl_numeral_unsigned!(u8, u16, u32, u64);
 
 impl Cardinal for i64 {
     fn cardinal(&self) -> String {
-        let n_abs = if *self == i64::min_value() { *self as u64 } else { self.abs() as u64 };
+        let n_abs = if *self == i64::MIN { *self as u64 } else { self.abs() as u64 };
         cardinal_int(n_abs, self.is_negative())
     }
 }
 
 impl Cardinal for isize {
     fn cardinal(&self) -> String {
-        let n_abs = if *self == isize::min_value() { *self as usize } else { self.abs() as usize };
+        let n_abs = if *self == isize::MIN { *self as usize } else { self.abs() as usize };
         cardinal_int(n_abs as u64, self.is_negative())
     }
 }
@@ -139,7 +141,7 @@ macro_rules! push {
     ($vec:ident, $table:ident[$index:ident]) => {
         debug_assert!(
             ($index as usize) < $table.len(),
-            format!("{} out of {}'s range", stringify!($index), stringify!($table))
+            "{} out of {}'s range", stringify!($index), stringify!($table)
         );
         $vec.push($table[$index as usize]);
     };
@@ -182,7 +184,7 @@ fn compose_cardinal_int(mut n: u64, mut multiple_order: u32, cardinal: &mut Vec<
 }
 
 /// Takes an integer in [1,999] and adds it's written form
-/// to a cardinal in construction. Zero is ignored.
+/// to a cardinal in construction.
 fn push_triplet(n: u64, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in push_triplet()");
     debug_assert!(n < 1000, "n >= 1000 in push_triplet()");
@@ -202,7 +204,7 @@ fn push_triplet(n: u64, cardinal: &mut Vec<&str>) {
 }
 
 /// Takes an integer in [1,99] and adds it's written form
-/// to a cardinal in construction. Zero is ignored.
+/// to a cardinal in construction.
 fn push_doublet(n: u64, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in push_doublet()");
     debug_assert!(n < 100, "n >= 100 in push_doublet()");
