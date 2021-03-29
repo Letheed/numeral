@@ -1,5 +1,6 @@
-use numeral::Cardinal;
 use std::{fs, mem};
+
+use numeral::Cardinal;
 
 macro_rules! test_call_on_min_max {
     ($fn_name:ident, $numtype:ty) => {

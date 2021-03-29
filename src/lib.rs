@@ -141,7 +141,9 @@ macro_rules! push {
     ($vec:ident, $table:ident[$index:ident]) => {
         debug_assert!(
             ($index as usize) < $table.len(),
-            "{} out of {}'s range", stringify!($index), stringify!($table)
+            "{} out of {}'s range",
+            stringify!($index),
+            stringify!($table)
         );
         $vec.push($table[$index as usize]);
     };
