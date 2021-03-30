@@ -120,8 +120,7 @@ impl Cardinal for usize {
     }
 }
 
-/// Returns the written form of any 64-bit integer
-/// as a vector of strings.
+/// Returns the written form of any 64-bit unsigned integer as a string.
 fn cardinal_int(n: u64, negative: bool) -> String {
     if n == 0 {
         return String::from(NUMBER[0]);
@@ -149,8 +148,8 @@ macro_rules! push {
     };
 }
 
-/// Pushes the strings composing the cardinal form of any unsigned 64-bit number
-/// on a vector. Zero is ignored.
+/// Pushes the strings composing the cardinal form of any 64-bit unsigned
+/// integer on a `str` stack. Zero is ignored.
 fn compose_cardinal_int(mut n: u64, mut multiple_order: u32, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in compose_cardinal_int()");
     debug_assert_eq!(
@@ -185,8 +184,7 @@ fn compose_cardinal_int(mut n: u64, mut multiple_order: u32, cardinal: &mut Vec<
     push_triplet(n, cardinal);
 }
 
-/// Takes an integer in [1,999] and adds it's written form
-/// to a cardinal in construction.
+/// Takes an integer in [1,999] and adds it's written form to a `str` stack.
 fn push_triplet(n: u64, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in push_triplet()");
     debug_assert!(n < 1000, "n >= 1000 in push_triplet()");
@@ -205,8 +203,7 @@ fn push_triplet(n: u64, cardinal: &mut Vec<&str>) {
     push_doublet(rest, cardinal);
 }
 
-/// Takes an integer in [1,99] and adds it's written form
-/// to a cardinal in construction.
+/// Takes an integer in [1,99] and adds it's written form to a `str` stack.
 fn push_doublet(n: u64, cardinal: &mut Vec<&str>) {
     debug_assert_ne!(n, 0, "n == 0 in push_doublet()");
     debug_assert!(n < 100, "n >= 100 in push_doublet()");
