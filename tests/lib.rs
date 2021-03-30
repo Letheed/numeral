@@ -27,7 +27,7 @@ macro_rules! test_call_on_full_range {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
-            for n in (<$numtype>::MIN)..=(<$numtype>::MAX) {
+            for n in <$numtype>::MIN..=<$numtype>::MAX {
                 n.cardinal();
             }
         }
@@ -43,14 +43,18 @@ macro_rules! test_call_on_critical_ranges {
     ($fn_name:ident, $numtype:ty) => {
         #[test]
         fn $fn_name() {
-            for n in (<$numtype>::MIN)..=(<$numtype>::MIN) + 130 {
+            let min = <$numtype>::MIN;
+            let max = <$numtype>::MAX;
+            let r = <$numtype>::from(130u8);
+            for n in min..=(min + r) {
                 n.cardinal();
             }
-            for n in (<$numtype>::MAX) - 130..=(<$numtype>::MAX) {
+            for n in (max - r)..=max {
                 n.cardinal();
             }
-            if <$numtype>::MIN != 0 {
-                for n in -130..=130 {
+            if min != 0 {
+                let zero = <$numtype>::from(0u8);
+                for n in (zero - r)..=r {
                     n.cardinal();
                 }
             }

@@ -5,7 +5,7 @@ macro_rules! bench_call_on_range {
     ($fn_name:ident, $numtype:ty) => {
         fn $fn_name(b: &mut Bencher) {
             b.iter(|| {
-                for n in (<$numtype>::MIN)..=(<$numtype>::MAX) {
+                for n in <$numtype>::MIN..=<$numtype>::MAX {
                     n.cardinal();
                 }
             })
