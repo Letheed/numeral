@@ -7,6 +7,7 @@ documentation = "https://docs.rs/numeral"
 repository = "https://github.com/letheed/numeral"
 readme = "README.md"
 keywords = ["number", "numeral", "written", "word", "cardinal"]
+categories = ["accessibility"]
 license = "MIT"
 edition = "2018"
 

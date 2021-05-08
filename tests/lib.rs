@@ -1,3 +1,8 @@
+#![warn(rust_2018_idioms)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::cargo)]
+#![warn(clippy::nursery)]
+
 use std::{fs, mem};
 
 use numeral::Cardinal;
@@ -45,7 +50,7 @@ macro_rules! test_call_on_critical_ranges {
         fn $fn_name() {
             let min = <$numtype>::MIN;
             let max = <$numtype>::MAX;
-            let r = <$numtype>::from(130u8);
+            let r = <$numtype>::from(130_u8);
             for n in min..=(min + r) {
                 n.cardinal();
             }
@@ -53,7 +58,7 @@ macro_rules! test_call_on_critical_ranges {
                 n.cardinal();
             }
             if min != 0 {
-                let zero = <$numtype>::from(0u8);
+                let zero = <$numtype>::from(0_u8);
                 for n in (zero - r)..=r {
                     n.cardinal();
                 }
